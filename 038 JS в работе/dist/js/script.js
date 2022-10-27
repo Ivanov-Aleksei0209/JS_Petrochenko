@@ -65,16 +65,16 @@ window.addEventListener('DOMContentLoaded', () => {
         } else {
             return num;
         }
-     }
+    }
 
     function setClock(selector, endtime) {
         const timer = document.querySelector(selector),
-              days = timer.querySelector('#days'),
-              hours = timer.querySelector('#hours'),
-              minutes = timer.querySelector('#minutes'),
-              seconds = timer.querySelector('#seconds'),
-              timeInterval = setInterval(updateClock, 1000);
-        
+            days = timer.querySelector('#days'),
+            hours = timer.querySelector('#hours'),
+            minutes = timer.querySelector('#minutes'),
+            seconds = timer.querySelector('#seconds'),
+            timeInterval = setInterval(updateClock, 1000);
+
         updateClock(); // чтобы не было первоначальной задержки таймера при обновлении страницы
 
         function updateClock() {
@@ -92,6 +92,47 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     setClock('.timer', deadLine);
+
+    // Modal
+
+    const modalTrigger = document.querySelectorAll('[data-modal]'),
+        modal = document.querySelector('.modal'),
+        modalCloseBtn = document.querySelector('[data-close]');
+
+    // открытие модального окна при нажатии на одну из кнопок на странице
+    modalTrigger.forEach(btn => {
+        btn.addEventListener('click', () => {
+            modal.classList.add('show');
+            modal.classList.remove('hide');
+            // modal.classList.toggle('show'); // альтернативный способ откытия модального окна
+            document.body.style.overflow = 'hidden'; // при вызове модального окна страница не скролиться        
+        });
+    });
+
+    // функция закрытия модального окна
+    function closeModal() {
+        modal.classList.add('hide');
+        modal.classList.remove('show');
+        // modal.classList.toggle('show'); // альтернативный способ откытия модального окна
+        document.body.style.overflow = ''; // при закрытии модального окна страница скролиться      
+    }
+
+    // закрытие модального окна
+    modalCloseBtn.addEventListener('click', closeModal);
+
+    // добавляем возможность закрытия модального окна кликом мыши вне модального окна
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // добавляем возможность закрывать модальное окно клавишей esc
+    document.addEventListener('keydown', (e) => {  
+        if (e.code === "Escape" && modal.classList.contains('show')) {
+            closeModal();
+        }
+    });
 
 });
 
